@@ -15,8 +15,7 @@ Scrum Master (SM): João Pedro Lopes RA: 22.125.065-7
 
 ### Equipe de Desenvolvimento
 Dev 1: Laura de Souza Parente RA: 22.123.033-7<br>
-Dev 2: João Pedro Peterutto   RA: 22.125.066-5<br>
-Dev 3: Rafel Takahagi Mendes  RA: 22.126.084-7
+Dev 2: Rafel Takahagi Mendes  RA: 22.126.084-7
 
 ## Resumo do Projeto
 
