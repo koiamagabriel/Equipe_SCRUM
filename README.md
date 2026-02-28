@@ -7,7 +7,7 @@ Projeto acadêmico para a disciplina de Gestão de Projetos de Software.
 Nome do projeto: Sistema de Reserva de Salas e Laboratórios  
 Objetivo: Permitir a reserva de salas e laboratórios com disponibilidade em tempo real, evitando conflitos e mantendo histórico de uso.
 
-## Equipe do Projeto (5 integrantes)
+## Equipe do Projeto (4 integrantes)
 
 ### Lideranças
 Product Owner (PO): Gabriel Koiama  RA: 22.125.067-3 <br>
