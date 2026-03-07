@@ -4,3 +4,10 @@ Entregar a primeira versão funcional do ReservaFEI, permitindo que usuários au
 Quadro Kanban:
 
 <img width="1245" height="752" alt="Captura de tela 2026-03-07 091721" src="https://github.com/user-attachments/assets/ab4912de-0543-45c7-918f-8bedba744aee" />
+
+
+
+
+
+Link do Trello:
+https://trello.com/b/mTeMGNiE/sistema-de-reserva-de-salas-e-laboratorios
