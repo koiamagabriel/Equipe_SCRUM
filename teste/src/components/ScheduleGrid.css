@@ -1,0 +1,100 @@
+.schedule-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .8125rem;
+  color: var(--color-text-secondary);
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.legend-available { background: var(--color-success); }
+.legend-busy       { background: var(--color-danger); }
+.legend-past       { background: var(--color-neutral); }
+
+.schedule-slots {
+  display: flex;
+  flex-direction: column;
+  gap: .375rem;
+}
+
+.schedule-slot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid transparent;
+  transition: all var(--transition);
+  cursor: default;
+}
+
+.slot-time {
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 48px;
+  flex-shrink: 0;
+}
+
+.slot-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .125rem;
+}
+
+.slot-label {
+  font-size: .8125rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+}
+.slot-label.available { color: var(--color-success); }
+.slot-label.busy      { color: var(--color-danger);  }
+.slot-label.past      { color: var(--color-neutral);  }
+
+.slot-owner {
+  font-size: .75rem;
+  color: var(--color-text-muted);
+}
+
+.slot-reservation { display: flex; flex-direction: column; gap: .125rem; }
+
+/* States */
+.schedule-slot-available {
+  background: var(--color-success-light);
+  border-color: #86efac;
+}
+.schedule-slot-busy {
+  background: var(--color-danger-light);
+  border-color: #fca5a5;
+}
+.schedule-slot-past {
+  background: var(--color-neutral-light);
+  border-color: var(--color-border);
+  opacity: .65;
+}
+
+/* Hover on available */
+.slot-clickable {
+  cursor: pointer;
+}
+.schedule-slot-available.slot-clickable:hover {
+  background: #bbf7c0;
+  border-color: var(--color-success);
+  transform: translateX(2px);
+}
+.schedule-slot-available.slot-clickable:focus-visible {
+  outline: 2px solid var(--color-success);
+  outline-offset: 2px;
+}
