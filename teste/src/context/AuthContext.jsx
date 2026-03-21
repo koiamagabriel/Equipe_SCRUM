@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ username, password })
       });
       localStorage.setItem('fei_token', data.token);
-      
+
       const user = await apiFetch('/auth/me');
       const normalizedUser = {
         ...user,
