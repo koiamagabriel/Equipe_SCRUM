@@ -1,0 +1,93 @@
+.rooms-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.rooms-header h1 { margin-bottom: .25rem; }
+.rooms-count { align-self: flex-start; margin-top: .5rem; }
+
+.rooms-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+/* Search */
+.search-box {
+  position: relative;
+  max-width: 440px;
+}
+.search-icon {
+  position: absolute;
+  left: .875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+.search-input {
+  padding-left: 2.5rem;
+  padding-right: 2.25rem;
+}
+.search-clear {
+  position: absolute;
+  right: .75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: .2rem;
+  border-radius: 50%;
+  line-height: 0;
+  transition: color var(--transition), background var(--transition);
+}
+.search-clear:hover {
+  color: var(--color-text);
+  background: var(--color-neutral-light);
+}
+
+/* Filter chips */
+.type-filters {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.filter-chip {
+  padding: .375rem .875rem;
+  font-size: .8125rem;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.filter-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.filter-chip.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+  gap: .75rem;
+}
+.empty-icon { font-size: 3rem; margin-bottom: .5rem; }
+.empty-state h3 { color: var(--color-text); }
+.empty-state p  { color: var(--color-text-muted); font-size: .9375rem; }

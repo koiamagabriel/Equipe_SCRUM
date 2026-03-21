@@ -1,0 +1,68 @@
+.back-btn { margin-bottom: 1.25rem; }
+
+.avail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.avail-header h1 { margin-bottom: .25rem; }
+.avail-room-name { font-weight: 600; color: var(--color-primary); }
+
+.date-picker-card {
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.date-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: .375rem;
+}
+.date-input { max-width: 200px; }
+.date-formatted {
+  font-size: .9375rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Stats */
+.avail-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.stat-card {
+  padding: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+}
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--color-text); line-height: 1; }
+.stat-label { font-size: .8125rem; color: var(--color-text-muted); font-weight: 500; }
+
+.avail-schedule-card { overflow: hidden; }
+.section-title { font-weight: 600; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+  gap: .75rem;
+}
+.empty-icon { font-size: 3rem; }
+
+@media (max-width: 600px) {
+  .avail-stats { grid-template-columns: repeat(3, 1fr); }
+  .stat-value   { font-size: 1.5rem; }
+}

@@ -1,0 +1,45 @@
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 1.25rem;
+}
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.modal-subtitle {
+  font-size: .875rem;
+  color: var(--color-text-secondary);
+  margin-top: .125rem;
+}
+.modal-close {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  padding: .375rem;
+}
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .75rem;
+  padding-top: .25rem;
+}
+
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions .btn { width: 100%; }
+}
