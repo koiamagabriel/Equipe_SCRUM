@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../services/api';
 import './RoomDetails.css';
 
@@ -19,8 +20,14 @@ const TYPE_BADGE = {
 export default function RoomDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const isAdmin = currentUser?.papel === 'Admin';
 
   useEffect(() => {
     apiFetch(`/espacos/${id}`)
@@ -43,6 +50,19 @@ export default function RoomDetails() {
       })
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      await apiFetch(`/espacos/${id}`, { method: 'DELETE' });
+      navigate('/');
+    } catch (err) {
+      setDeleteError(err.message || 'Erro ao remover espaço.');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -172,10 +192,60 @@ export default function RoomDetails() {
               >
                 Ver agenda completa
               </button>
+
+              {/* Admin actions */}
+              {isAdmin && (
+                <>
+                  <hr className="divider" style={{ width: '100%' }} />
+                  <button
+                    id="btn-edit-space"
+                    className="btn btn-outline btn-full"
+                    onClick={() => navigate(`/admin/espacos/${room.id}/editar`)}
+                  >
+                    ✏️ Editar Espaço
+                  </button>
+                  <button
+                    id="btn-delete-space"
+                    className="btn btn-danger btn-full"
+                    onClick={() => setShowDeleteModal(true)}
+                  >
+                    🗑️ Remover Espaço
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete confirmation modal */}
+      {showDeleteModal && (
+        <div className="modal-backdrop" onClick={() => { if (!deleting) setShowDeleteModal(false); }}>
+          <div className="modal-box fade-in-scale" onClick={e => e.stopPropagation()} style={{ padding: '2rem' }}>
+            <h2 style={{ marginBottom: '.75rem' }}>Confirmar Remoção</h2>
+            <p style={{ marginBottom: '1.25rem' }}>
+              Tem certeza que deseja remover o espaço <strong>{room.name}</strong> ({room.id})? Esta ação não pode ser desfeita.
+            </p>
+            {deleteError && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>{deleteError}</div>}
+            <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'flex-end' }}>
+              <button
+                className="btn btn-ghost"
+                onClick={() => { setShowDeleteModal(false); setDeleteError(''); }}
+                disabled={deleting}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? 'Removendo...' : 'Sim, Remover'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

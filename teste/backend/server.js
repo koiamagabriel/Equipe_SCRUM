@@ -268,6 +268,139 @@ app.patch('/api/reservas/:id/cancelar', autenticarToken, (req, res) => {
   res.json(reservaAtualizada);
 });
 
+// ─── SPRINT 2 ENDPOINTS ───────────────────────────────────────────────────
+
+// GET /api/reservas/agenda — Agenda geral (todas as reservas de uma data)
+app.get('/api/reservas/agenda', autenticarToken, (req, res) => {
+  const { data } = req.query;
+  if (!data) return res.status(400).json({ message: 'Parâmetro "data" é obrigatório.' });
+
+  const reservas = db.prepare(`
+    SELECT r.id, r.id_espaco, e.nome as espaco_nome, r.hora_inicio, r.hora_fim, r.finalidade, u.nome as usuario_nome
+    FROM reservas r
+    JOIN espacos e ON r.id_espaco = e.id
+    JOIN usuarios u ON r.id_usuario = u.id
+    WHERE r.data = ? AND r.status = 'ativa'
+    ORDER BY r.hora_inicio ASC
+  `).all(data);
+
+  res.json(reservas);
+});
+
+// POST /api/espacos — Criar espaço (Admin only)
+app.post('/api/espacos', autenticarToken, (req, res) => {
+  if (req.usuario.papel !== 'Admin') {
+    return res.status(403).json({ message: 'Acesso restrito a administradores.' });
+  }
+
+  const { id, nome, tipo, capacidade, localizacao, observacoes } = req.body;
+
+  if (!id || !nome || !tipo || !capacidade || !localizacao) {
+    return res.status(400).json({ message: 'Campos obrigatórios: id, nome, tipo, capacidade, localizacao.' });
+  }
+
+  const existente = db.prepare('SELECT id FROM espacos WHERE id = ?').get(id);
+  if (existente) {
+    return res.status(409).json({ message: 'Já existe um espaço com este ID.' });
+  }
+
+  db.prepare(`
+    INSERT INTO espacos (id, nome, tipo, capacidade, localizacao, observacoes)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(id, nome, tipo, Number(capacidade), localizacao, observacoes || null);
+
+  const novoEspaco = db.prepare('SELECT * FROM espacos WHERE id = ?').get(id);
+  res.status(201).json(novoEspaco);
+});
+
+// PUT /api/espacos/:id — Editar espaço (Admin only)
+app.put('/api/espacos/:id', autenticarToken, (req, res) => {
+  if (req.usuario.papel !== 'Admin') {
+    return res.status(403).json({ message: 'Acesso restrito a administradores.' });
+  }
+
+  const { id } = req.params;
+  const espaco = db.prepare('SELECT * FROM espacos WHERE id = ?').get(id);
+  if (!espaco) {
+    return res.status(404).json({ message: 'Espaço não encontrado.' });
+  }
+
+  const { nome, tipo, capacidade, localizacao, observacoes } = req.body;
+
+  if (!nome || !tipo || !capacidade || !localizacao) {
+    return res.status(400).json({ message: 'Campos obrigatórios: nome, tipo, capacidade, localizacao.' });
+  }
+
+  db.prepare(`
+    UPDATE espacos SET nome = ?, tipo = ?, capacidade = ?, localizacao = ?, observacoes = ?
+    WHERE id = ?
+  `).run(nome, tipo, Number(capacidade), localizacao, observacoes || null, id);
+
+  const espacoAtualizado = db.prepare('SELECT * FROM espacos WHERE id = ?').get(id);
+  res.json(espacoAtualizado);
+});
+
+// DELETE /api/espacos/:id — Remover espaço (Admin only)
+app.delete('/api/espacos/:id', autenticarToken, (req, res) => {
+  if (req.usuario.papel !== 'Admin') {
+    return res.status(403).json({ message: 'Acesso restrito a administradores.' });
+  }
+
+  const { id } = req.params;
+  const espaco = db.prepare('SELECT * FROM espacos WHERE id = ?').get(id);
+  if (!espaco) {
+    return res.status(404).json({ message: 'Espaço não encontrado.' });
+  }
+
+  const reservasAtivas = db.prepare(
+    "SELECT COUNT(*) as count FROM reservas WHERE id_espaco = ? AND status = 'ativa'"
+  ).get(id).count;
+
+  if (reservasAtivas > 0) {
+    return res.status(409).json({ message: 'Não é possível remover. Existem reservas ativas vinculadas a este espaço.' });
+  }
+
+  db.prepare('DELETE FROM espacos WHERE id = ?').run(id);
+  res.json({ message: 'Espaço removido com sucesso.' });
+});
+
+// POST /api/usuarios — Cadastrar usuário (Admin only)
+app.post('/api/usuarios', autenticarToken, (req, res) => {
+  if (req.usuario.papel !== 'Admin') {
+    return res.status(403).json({ message: 'Acesso restrito a administradores.' });
+  }
+
+  const { username, nome, senha, papel, email, status } = req.body;
+
+  if (!username || !nome || !senha || !papel) {
+    return res.status(400).json({ message: 'Campos obrigatórios: username, nome, senha, papel.' });
+  }
+
+  if (!['Aluno', 'Professor', 'Admin'].includes(papel)) {
+    return res.status(400).json({ message: 'Papel deve ser Aluno, Professor ou Admin.' });
+  }
+
+  if (senha.length < 4) {
+    return res.status(400).json({ message: 'A senha deve ter no mínimo 4 caracteres.' });
+  }
+
+  const existente = db.prepare('SELECT id FROM usuarios WHERE username = ?').get(username);
+  if (existente) {
+    return res.status(409).json({ message: 'Já existe um usuário com este username.' });
+  }
+
+  const senha_hash = bcrypt.hashSync(senha, 10);
+  const statusFinal = status || 'ativo';
+
+  db.prepare(`
+    INSERT INTO usuarios (username, email, senha_hash, nome, papel, status)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(username, email || null, senha_hash, nome, papel, statusFinal);
+
+  const novoUsuario = db.prepare('SELECT id, username, email, nome, papel, status FROM usuarios WHERE username = ?').get(username);
+  res.status(201).json(novoUsuario);
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Backend rodando na porta ${PORT}`);

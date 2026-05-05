@@ -13,6 +13,8 @@ export default function Navbar() {
     navigate('/login');
   };
 
+  const isAdmin = currentUser?.papel === 'Admin';
+
   return (
     <nav className="navbar">
       <div className="navbar-inner container">
@@ -30,13 +32,26 @@ export default function Navbar() {
           <NavLink to="/minhas-reservas" className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}>
             Minhas Reservas
           </NavLink>
+          <NavLink to="/agenda-geral" className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}>
+            Agenda Geral
+          </NavLink>
+          {isAdmin && (
+            <>
+              <NavLink to="/admin/espacos/novo" className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}>
+                Novo Espaço
+              </NavLink>
+              <NavLink to="/admin/usuarios/novo" className={({isActive}) => `nav-link ${isActive ? 'active' : ''}`}>
+                Novo Usuário
+              </NavLink>
+            </>
+          )}
         </div>
 
         {/* User pill */}
         <div className="navbar-user">
           <div className="user-pill">
-            <div className="user-avatar">{currentUser?.name?.[0]?.toUpperCase()}</div>
-            <span className="user-name">{currentUser?.name}</span>
+            <div className="user-avatar">{currentUser?.nome?.[0]?.toUpperCase()}</div>
+            <span className="user-name">{currentUser?.nome}</span>
           </div>
           <button className="btn btn-ghost btn-sm" onClick={handleLogout} title="Sair">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,9 +76,17 @@ export default function Navbar() {
         <div className="mobile-menu slide-down">
           <NavLink to="/" end className="mobile-link" onClick={() => setMenuOpen(false)}>Salas</NavLink>
           <NavLink to="/minhas-reservas" className="mobile-link" onClick={() => setMenuOpen(false)}>Minhas Reservas</NavLink>
+          <NavLink to="/agenda-geral" className="mobile-link" onClick={() => setMenuOpen(false)}>Agenda Geral</NavLink>
+          {isAdmin && (
+            <>
+              <hr className="divider" style={{margin: '.5rem 0'}} />
+              <NavLink to="/admin/espacos/novo" className="mobile-link" onClick={() => setMenuOpen(false)}>Novo Espaço</NavLink>
+              <NavLink to="/admin/usuarios/novo" className="mobile-link" onClick={() => setMenuOpen(false)}>Novo Usuário</NavLink>
+            </>
+          )}
           <hr className="divider" style={{margin: '.5rem 0'}} />
           <div className="mobile-user">
-            <span>{currentUser?.name} · {currentUser?.role}</span>
+            <span>{currentUser?.nome} · {currentUser?.papel}</span>
             <button className="btn btn-ghost btn-sm" onClick={() => { handleLogout(); setMenuOpen(false); }}>Sair</button>
           </div>
         </div>

@@ -9,6 +9,9 @@ import RoomDetails from './pages/RoomDetails';
 import Availability from './pages/Availability';
 import MyReservations from './pages/MyReservations';
 import RoomAgenda from './pages/RoomAgenda';
+import GeneralAgenda from './pages/GeneralAgenda';
+import AdminSpaceForm from './pages/AdminSpaceForm';
+import AdminUserForm from './pages/AdminUserForm';
 
 export default function App() {
   return (
@@ -24,12 +27,16 @@ export default function App() {
                   <>
                     <Navbar />
                     <Routes>
-                      <Route path="/"                   element={<RoomList />} />
-                      <Route path="/salas/:id"          element={<RoomDetails />} />
+                      <Route path="/"                          element={<RoomList />} />
+                      <Route path="/salas/:id"                 element={<RoomDetails />} />
                       <Route path="/salas/:id/disponibilidade" element={<Availability />} />
-                      <Route path="/salas/:id/agenda"   element={<RoomAgenda />} />
-                      <Route path="/minhas-reservas"    element={<MyReservations />} />
-                      <Route path="*"                   element={<Navigate to="/" replace />} />
+                      <Route path="/salas/:id/agenda"          element={<RoomAgenda />} />
+                      <Route path="/minhas-reservas"           element={<MyReservations />} />
+                      <Route path="/agenda-geral"              element={<GeneralAgenda />} />
+                      <Route path="/admin/espacos/novo"        element={<AdminSpaceForm />} />
+                      <Route path="/admin/espacos/:id/editar"  element={<AdminSpaceForm />} />
+                      <Route path="/admin/usuarios/novo"       element={<AdminUserForm />} />
+                      <Route path="*"                          element={<Navigate to="/" replace />} />
                     </Routes>
                   </>
                 </ProtectedRoute>

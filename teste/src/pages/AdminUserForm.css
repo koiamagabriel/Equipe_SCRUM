@@ -1,0 +1,15 @@
+/* Admin User Form — extends AdminSpaceForm patterns */
+.admin-user-form-card {
+  padding: 2rem;
+  max-width: 640px;
+}
+.password-hint {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+  font-size: .75rem;
+  color: var(--color-text-muted);
+}
+@media (max-width: 640px) {
+  .admin-user-form-card { padding: 1.5rem; }
+}
