@@ -24,6 +24,7 @@ export default function AdminSpaceForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
 
   // Redirect non-admin
   if (currentUser?.papel !== 'Admin') {
@@ -54,12 +55,14 @@ export default function AdminSpaceForm() {
     setForm(prev => ({ ...prev, [name]: value }));
     setError('');
     setSuccess('');
+    setWarning('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setWarning('');
 
     // Validation
     if (!isEdit && !form.id.trim()) {
@@ -77,7 +80,7 @@ export default function AdminSpaceForm() {
     setSubmitting(true);
     try {
       if (isEdit) {
-        await apiFetch(`/espacos/${id}`, {
+        const resultado = await apiFetch(`/espacos/${id}`, {
           method: 'PUT',
           body: JSON.stringify({
             nome: form.nome.trim(),
@@ -87,7 +90,13 @@ export default function AdminSpaceForm() {
             observacoes: form.observacoes.trim() || null,
           }),
         });
-        setSuccess('Espaço atualizado com sucesso!');
+        if (resultado.temReservasAtivas) {
+          setWarning(
+            `Espaço atualizado, porém existem ${resultado.quantidadeReservasAtivas} reserva(s) ativa(s) que podem ser impactadas pela alteração de campos críticos (tipo/capacidade).`
+          );
+        } else {
+          setSuccess('Espaço atualizado com sucesso!');
+        }
       } else {
         await apiFetch('/espacos', {
           method: 'POST',
@@ -239,6 +248,7 @@ export default function AdminSpaceForm() {
             </div>
 
             {error && <div className="alert alert-error">{error}</div>}
+            {warning && <div className="alert alert-warning">{warning}</div>}
             {success && <div className="alert alert-success">{success}</div>}
 
             <div className="admin-form-actions">

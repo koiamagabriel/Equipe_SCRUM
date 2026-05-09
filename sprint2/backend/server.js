@@ -331,13 +331,30 @@ app.put('/api/espacos/:id', autenticarToken, (req, res) => {
     return res.status(400).json({ message: 'Campos obrigatórios: nome, tipo, capacidade, localizacao.' });
   }
 
+  // RISK01 — Verificar impacto em reservas ativas ao alterar campos críticos
+  const camposCriticosAlterados =
+    espaco.tipo !== tipo || espaco.capacidade !== Number(capacidade);
+
+  const reservasAtivas = db.prepare(
+    "SELECT COUNT(*) as count FROM reservas WHERE id_espaco = ? AND status = 'ativa'"
+  ).get(id).count;
+
+  const temReservasAtivas = camposCriticosAlterados && reservasAtivas > 0;
+
+  // Executa o UPDATE normalmente (não bloqueia)
   db.prepare(`
     UPDATE espacos SET nome = ?, tipo = ?, capacidade = ?, localizacao = ?, observacoes = ?
     WHERE id = ?
   `).run(nome, tipo, Number(capacidade), localizacao, observacoes || null, id);
 
   const espacoAtualizado = db.prepare('SELECT * FROM espacos WHERE id = ?').get(id);
-  res.json(espacoAtualizado);
+
+  // Retorna flag de aviso junto com os dados atualizados
+  res.json({
+    ...espacoAtualizado,
+    temReservasAtivas,
+    quantidadeReservasAtivas: temReservasAtivas ? reservasAtivas : 0,
+  });
 });
 
 // DELETE /api/espacos/:id — Remover espaço (Admin only)

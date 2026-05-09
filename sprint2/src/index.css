@@ -212,6 +212,7 @@ p  { color: var(--color-text-secondary); }
 .alert-error   { background: var(--color-danger-light);  color: var(--color-danger);  border: 1px solid #fca5a5; }
 .alert-success { background: var(--color-success-light); color: var(--color-success); border: 1px solid #86efac; }
 .alert-info    { background: var(--color-primary-light); color: var(--color-primary); border: 1px solid #93c5fd; }
+.alert-warning { background: var(--color-warning-light); color: var(--color-warning); border: 1px solid #fcd34d; }
 
 /* ─── Divider ───────────────────────────────────────────────────────────── */
 .divider {
